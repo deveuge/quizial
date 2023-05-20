@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:include="fragments/head.html :: head(#{app.home})"/>
+	<style>
+		body {
+			background-color: var(--bg-color);
+		}
+	</style>
+</head>
+<body>
+	<th:block th:include="fragments/preloader.html :: preloader"/>
+	<th:block th:include="fragments/alerts.html :: alerts"/>
+	
+	<div th:if="${param.error}" id="alerts" class="uk-position-top uk-padding-small">
+		<div class="uk-alert-danger uk-margin-remove" uk-alert>
+			<a class="uk-alert-close" uk-close></a>
+			<span th:text="#{user.login.error}"></span>
+		</div>
+	</div>
+	
+	<!-- START: LOGIN FORM -->
+    <div class="uk-section uk-section-muted uk-flex uk-flex-middle uk-animation-fade" uk-height-viewport uk-animation-fade>
+      <div class="uk-width-1-1">
+        <div class="uk-container">
+          <div class="uk-grid-margin uk-grid uk-grid-stack" uk-grid>
+            <div class="uk-width-1-1 uk-width-5-6@s uk-margin-auto">
+              <div class="uk-card uk-card-default uk-card-large uk-grid-collapse uk-child-width-1-2@s uk-margin uk-border-rounded uk-position-relative uk-overflow-hidden" uk-grid>
+                <div class="uk-flex-last@s uk-card-media-right uk-cover-container">
+                  <img th:src="@{/resources/img/header.jpg}" alt="#{app.name}" uk-cover />
+                  <div id="app-title" class="uk-overlay uk-position-center">
+                    <img th:src="@{/resources/img/icon.svg}" th:alt="#{app.name}" />
+                    <h1 class="uk-text-bold uk-text-uppercase">[[#{app.name}]]</h1>
+                  </div>
+                </div>
+                <div>
+                  <div class="uk-card-body">
+                    <ul class="uk-tab uk-flex-center" uk-grid uk-switcher="animation: uk-animation-fade">
+                      <li th:class="${indexTab == 1} ? 'uk-active' : ''"><a href="#" th:text="#{index.signup}">Sign Up</a></li>
+                      <li th:class="${indexTab == null} ? 'uk-active' : ''"><a href="#" th:text="#{index.login}">Log In</a></li>
+                      <li th:classappend="${indexTab == 3} ? 'uk-active' : ''" class="uk-hidden"><a href="#" th:text="#{index.password.forgot}">Forgot Password?</a></li>
+                    </ul>
+                    <ul class="uk-switcher uk-margin">
+                      <!-- SIGN UP -->
+                      <li>
+                        <form th:action="@{/register}" method="POST" th:object="${user}">
+                          <div class="uk-margin">
+                            <label class="uk-form-label" for="su-username" th:text="#{user.username}">Username</label>
+                            <div class="uk-form-controls">
+                              <input class="uk-input" id="su-username" th:field="*{username}" type="text" required="required"/>
+                            </div>
+                          </div>
+                          <div class="uk-margin">
+                            <label class="uk-form-label" for="su-email" th:text="#{user.email}">Email</label>
+                            <div class="uk-form-controls">
+                              <input class="uk-input" id="su-email" type="text" th:field="*{email}" required="required"/>
+                            </div>
+                          </div>
+                          <div class="uk-margin">
+                            <label class="uk-form-label" for="su-password" th:text="#{user.password}">Password</label>
+                            <div class="uk-form-controls">
+                              <input class="uk-input" id="su-password" type="password" th:field="*{password}" required="required"/>
+                            </div>
+                          </div>
+                          <div class="uk-margin">
+                            <label class="uk-form-label" for="su-repeat-password" th:text="#{index.password.repeat}">Repeat password</label>
+                            <div class="uk-form-controls">
+                              <input class="uk-input" id="su-repeat-password" type="password" th:field="*{repeatPassword}" required="required"/>
+                            </div>
+                            <small class="uk-flex uk-flex-middle uk-margin-small-top" th:text="#{index.password.hint}">Minimum 6 characters, at least one letter and one number.</small>
+                          </div>
+                          <div class="uk-margin">
+                            <div class="uk-form-controls">
+                              <label><input class="uk-checkbox uk-margin-small-right" type="checkbox" required="required"/><small>[[#{index.legal.accept}]] <a th:href="@{/legal/tou}" th:text="#{index.legal.tou}">Terms of Service</a> [[#{index.legal.and}]] <a th:href="@{/legal/pp}" th:text="#{index.legal.pp}">Privacy Policy</a>.</small></label>
+                            </div>
+                          </div>
+                          <th:block th:include="fragments/alerts.html :: validation"/>
+                          <div class="uk-margin">
+                            <button class="uk-button uk-button-primary uk-button-large uk-width-1-1" th:text="#{index.account.create}">Create Account</button>
+                          </div>
+                          <div class="uk-text-small uk-text-center">[[#{index.account.hint.yes}]] <a href="#" uk-switcher-item="1" th:text="#{index.login}">Log in</a></div>
+                        </form>
+                      </li>
+                      <!-- LOGIN -->
+                      <li>
+                        <form th:action="@{/}" method="POST">
+                          <div class="uk-margin">
+                            <label class="uk-form-label" for="li-username" th:text="#{index.username.email}">Username or email</label>
+                            <div class="uk-form-controls">
+                              <input class="uk-input" id="li-username" name="li-username" type="text" required="required"/>
+                            </div>
+                          </div>
+                          <div class="uk-margin">
+                            <label class="uk-form-label" for="li-password" th:text="#{user.password}">Password</label>
+                            <div class="uk-form-controls">
+                              <input class="uk-input" id="li-password" name="li-password" type="password" required="required" />
+                            </div>
+                          </div>
+                          <div class="uk-grid-small uk-margin" uk-grid>
+                            <div class="uk-width-auto uk-form-controls">
+                              <label for="remember-me">
+                                <input class="uk-checkbox uk-margin-small-right" id="remember-me" name="remember-me" type="checkbox" />
+                                <small th:text="#{index.remember.me}">Remember me</small>
+                              </label>
+                            </div>
+                            <div class="uk-width-expand@s uk-width-auto uk-text-right@s uk-text-center uk-text-small">
+                              <a href="#" uk-switcher-item="2" th:text="#{index.password.forgot}">Forgot Password?</a>
+                            </div>
+                          </div>
+                          <div class="uk-margin">
+                            <button class="uk-button uk-button-primary uk-button-large uk-width-1-1" th:text="#{index.login}">Login</button>
+                          </div>
+                          <div class="uk-text-small uk-text-center">[[#{index.account.hint.no}]] <a href="#" uk-switcher-item="0" th:text="#{index.account.create}">Create an account</a></div>
+                        </form>
+                      </li>
+                      <!-- FORGOT PASSWORD -->
+                      <li>
+                        <h3 class="uk-card-title uk-text-center" th:text="#{index.password.forgot}">Forgot your password?</h3>
+                        <p class="uk-text-center uk-width-medium@s uk-margin-auto" th:text="#{index.password.recover.hint}">Enter your email address and we will send you a link to reset your password.</p>
+                        <form th:action="@{/reset}" method="POST" th:object="${user}">
+                          <div class="uk-margin">
+                            <div class="uk-inline uk-width-1-1">
+                              <span class="uk-form-icon" uk-icon="icon: mail"></span>
+                              <input class="uk-input" type="email" th:field="*{resetEmail}" th:placeholder="#{index.password.recover.email}" required="required"/>
+                            </div>
+                          </div>
+                          <div class="uk-margin">
+                            <button class="uk-button uk-button-primary uk-button-large uk-width-1-1" th:text="#{index.password.recover.send}">Send Email</button>
+                          </div>
+                          <div class="uk-text-small uk-text-center">
+                            <a href="#" uk-switcher-item="1" th:text="#{index.login.return}">Back to login</a>
+                          </div>
+                        </form>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <th:block th:include="fragments/footer.html :: loginFooter"/>
+</body>
+</html>

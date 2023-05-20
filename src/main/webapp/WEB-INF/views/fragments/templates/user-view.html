@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" >
+
+<!-- QUIZZES -->
+<th:block th:fragment="user-quizzes(quizzes)">
+	<li th:fragment="quizzes" class="quizzes-wrapper">
+		<div th:id="quizzes">
+			<div class="uk-child-width-1-1@s uk-child-width-1-2@m" uk-grid uk-height-match="target: > div > .uk-card">
+				<div th:each="quiz : ${quizzes}">
+					<div class="uk-card uk-card-default">
+						<div class="uk-card-media-top uk-cover-container">
+							<div class="uk-inline-clip uk-transition-toggle" tabindex="0">
+								<img class="uk-transition-scale-up uk-transition-opaque"
+									th:src="@{'/uploads/q/' + ${quiz.fullImage}}"
+									th:alt="${quiz.name}" />
+							</div>
+						</div>
+						<div class="uk-card-body uk-position-relative">
+							<h3 class="uk-card-title uk-margin-small-bottom"
+								th:text="${quiz.name}"></h3>
+							<p class="uk-margin-remove-top uk-margin-medium-bottom"
+								th:text="${quiz.description}"></p>
+						</div>
+						<div class="uk-card-footer uk-position-bottom">
+							<small th:text="${quiz.getTimeAgo(#locale)}"></small> <a
+								th:href="@{/q/{id}(id=${quiz.id})}"
+								class="uk-button uk-margin-right uk-margin-bottom uk-button-primary uk-position-bottom-right"
+								th:text="#{button.quiz.take}"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<th:block th:include="fragments/pagination.html :: pagination('quizzes', ${pageQuiz})" />
+		</div>
+	</li>
+</th:block>
+
+<!-- FAVORITES -->
+<th:block th:fragment="user-favorites(favorites, isCurrentUser)">
+	<li th:fragment="favorites" class="quizzes-wrapper horizontal">
+		<div th:id="favorites">
+			<div th:each="quiz : ${favorites}"
+				class="uk-card uk-card-default uk-grid-collapse uk-margin" uk-grid>
+				<div class="uk-card-media-left uk-cover-container uk-width-1-3@m">
+					<div class="uk-inline-clip uk-transition-toggle" tabindex="0">
+						<img class="uk-transition-scale-up uk-transition-opaque"
+							th:src="@{'/uploads/q/' + ${quiz.fullImage}}"
+							th:alt="${quiz.name}" />
+					</div>
+				</div>
+				<div class=" uk-width-expand@m">
+					<div class="uk-card-body">
+						<h3 class="uk-card-title uk-margin-small-bottom"
+							th:text="${quiz.name}"></h3>
+						<p class="uk-margin-remove-top uk-margin-medium-bottom"
+							th:text="${quiz.description}"></p>
+						<div class="uk-position-bottom-right">
+							<button th:if="${isCurrentUser}"
+								class="uk-button uk-icon uk-light uk-button-danger uk-margin-small-right uk-margin-bottom"
+								th:uk-tooltip="#{button.quiz.favorite.remove}" th:onclick="removeFavorite([[ ${quiz.id} ]])">
+								<span uk-icon="icon: trash"></span>
+							</button>
+							<a th:href="@{/q/{id}(id=${quiz.id})}"
+								class="uk-button uk-margin-right uk-margin-bottom uk-button-primary"
+								th:text="#{button.quiz.take}"></a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<th:block th:include="fragments/pagination.html :: pagination('favorites', ${pageFav})" />
+			<script th:if="${isCurrentUser}" th:inline="javascript">
+			/*[+
+				function removeFavorite(id) {
+					let url = [[@{/q/_ID_/fav}]].replace("_ID_", id);
+					sendAjaxPetition(url, 'DELETE', updateFavoritePagination);
+					function updateFavoritePagination() {
+						$("#favorites").load([[ @{${pageFav.url}(page=${pageFav.getReloadPage()})} ]]);
+					}
+			    }
+			+]*/ 
+			</script>
+		</div>
+	</li>
+</th:block>
+
+<!-- FRIENDS -->
+<th:block th:fragment="user-friends(friends, isCurrentUser)">
+	<li th:fragment="friends">
+		<div th:id="friends">
+			<dl class="uk-description-list uk-description-list-divider">
+				<th:block th:each="user : ${friends}">
+					<dt>
+						<img class="uk-border-circle uk-float-left uk-margin-right"
+							th:src="@{'/uploads/u/' + ${user.image}}" width="50" height="50"
+							th:alt="${user.name}"> [[${user.name}]]
+						<div class="uk-float-right">
+							<button th:if="${isCurrentUser}" class="uk-icon-button uk-icon uk-light uk-button-danger"
+								th:uk-tooltip="#{button.user.remove}" th:onclick="removeFriend([[ ${user.username} ]])">
+								<span uk-icon="icon: minus"></span>
+							</button>
+							<a th:href="@{/u/{id}(id=${user.username})}"
+								class="uk-icon-button uk-icon uk-background-primary uk-light"
+								th:uk-tooltip="#{button.user.view}"> <span uk-icon="icon: user"></span>
+							</a>
+						</div>
+					</dt>
+					<dd th:text="${'@' + user.username}"></dd>
+				</th:block>
+			</dl>
+			<th:block th:include="fragments/pagination.html :: pagination('friends', ${pageFriend})" />
+			<script th:if="${isCurrentUser}" th:inline="javascript">
+			/*[+
+				function removeFriend(id) {
+					let url = [[@{/u/_ID_/friend}]].replace("_ID_", id);
+					sendAjaxPetition(url, 'DELETE', updateFriendPagination);
+					function updateFriendPagination() {
+						$("#friends").load([[ @{${pageFriend.url}(page=${pageFriend.getReloadPage()})} ]]);
+					}
+			    }
+			+]*/ 
+			</script>
+		</div>
+	</li>
+</th:block>
+
+</html>

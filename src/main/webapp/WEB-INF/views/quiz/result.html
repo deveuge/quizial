@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<th:block th:include="fragments/head.html :: head(#{app.quizzes})"/>
+</head>
+<body>
+	<th:block th:include="fragments/navigation.html :: topnav" />
+	<th:block th:include="fragments/alerts.html :: alerts"/>
+	
+    <div class="uk-section uk-section-muted">
+      <div class="uk-container uk-container-center">
+	    <th:block th:include="fragments/templates/quiz-view.html :: quiz-header(${quiz})"/>
+
+        <!-- Result -->
+        <div class="uk-grid-divider uk-margin" uk-grid>
+          <div class="uk-width-1-2@m">
+            <img class="quiz-answer-img" th:src="${result.image}" th:onerror="|this.src = '@{/resources/img/question.gif}'|" />
+          </div>
+          <div class="uk-width-expand@m">
+            <div class="uk-margin">
+              <div class="uk-form-label">
+                <h2 class="uk-heading-line"><span th:text="${result.name}"></span></h2>
+              </div>
+              <p th:text="${result.description}"></p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="uk-grid-small uk-margin uk-grid" uk-grid>
+          <div class="uk-width-1-3@s">
+            <a th:href="@{/q/{id}(id=${quiz.id})}" class="uk-button uk-button-default uk-button-large uk-width-1-1"><span uk-icon="refresh"></span> [[#{button.quiz.reset}]]</a>
+          </div>
+          <div class="uk-width-1-3@s">
+	        <button sec:authorize="isAuthenticated()" th:classappend="${isFavorite ? '' : 'uk-hidden'}" type="button" class="uk-button uk-button-default uk-button-large uk-width-1-1 fav-button"><span uk-icon="heart"></span> [[#{button.quiz.favorite.remove}]]</button>
+	        <button sec:authorize="isAuthenticated()" th:classappend="${!isFavorite ? '' : 'uk-hidden'}" type="button" class="uk-button uk-button-danger uk-button-large uk-width-1-1 fav-button"><span uk-icon="heart"></span> [[#{button.quiz.favorite}]]</button>
+          </div>
+          <div class="uk-width-1-3@s"></div>
+        </div>
+      </div>
+    </div>
+    
+    <th:block th:fragment="fav-button" sec:authorize="isAuthenticated()">
+		<form id="fav-form" th:action="@{/q/{id}/fav(id=${quiz != null ? quiz.id : quizId})}" th:method="${isFavorite ? 'DELETE' : 'PUT'}"
+			onsubmit="sendAjaxForm(event, '#fav-form', '#fav-form')"></form>
+	</th:block>
+
+    <th:block th:include="fragments/templates/quiz-view.html :: quiz-footer(${quiz}, ${quizForm})"/>
+    <!-- END: QUIZ VIEW -->
+	
+    <th:block th:include="fragments/footer.html :: mainFooter"/>
+</body>
+</html>

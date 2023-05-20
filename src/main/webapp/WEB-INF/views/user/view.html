@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<th:block th:include="fragments/head.html :: head(#{app.profile})"/>
+</head>
+<body>
+	<th:block th:include="fragments/preloader.html :: preloader"/>
+	<th:block th:include="fragments/navigation.html :: topnav" />
+	<th:block th:include="fragments/alerts.html :: alerts"/>
+	
+	<!-- START: USER PROFILE -->
+    <div class="uk-section uk-section-muted">
+      <div class="uk-container uk-container-center">
+        <article class="uk-article uk-card-default uk-padding-large">
+          <div class="uk-flex uk-flex-right">
+          	<form th:action="@{/u/{id}/friend(id=${user.username})}" th:method="${isFriend ? 'DELETE' : 'PUT'}" th:if="${!isCurrentUser}">
+	            <button type="submit" class="uk-icon-button uk-icon uk-light"  th:classappend="${isFriend} ? 'uk-button-danger' : 'uk-background-primary'" 
+	            	th:uk-tooltip="${isFriend} ? #{button.user.remove} : #{button.user.add}">
+	              <span th:uk-icon="${isFriend ? 'minus' : 'plus'}"></span>
+	            </button>
+            </form>
+            <a href="#" class="uk-icon-button uk-icon uk-margin-small-left" data-uk-icon="icon:more-vertical" aria-haspopup="true" aria-expanded="false"
+              ><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10" cy="3" r="2"></circle>
+                <circle cx="10" cy="10" r="2"></circle>
+                <circle cx="10" cy="17" r="2"></circle></svg
+            ></a>
+            <div data-uk-dropdown="mode:click; pos: bottom-right; boundary:#user-wrap" class="uk-dropdown" style="max-width: 1873px; top: 46px; left: -164px">
+              <ul class="uk-nav uk-dropdown-nav">
+                <li class="uk-nav-header" th:text="#{user.profile.action.title}"></li>
+                <li><a href="#" th:text="#{user.profile.action.edit}"></a></li>
+                <li class="uk-nav-divider"></li>
+                <li><a href="#" th:text="#{user.profile.action.report}"></a></li>
+              </ul>
+            </div>
+          </div>
+          <img class="uk-border-circle uk-align-center" th:src="@{'/uploads/u/' + ${user.image}}" width="150" height="150" th:alt="${user.name}"/>
+          <h1 class="uk-article-title uk-margin-remove text-center" th:text="${user.name}"></h1>
+          <p class="uk-article-meta uk-margin-remove text-center" th:text="${'@' + user.username}"></p>
+          <ul class="uk-subnav uk-subnav-pill uk-flex uk-flex-center" uk-switcher>
+            <li><a href="#" th:text="#{user.profile.quizzes}"></a></li>
+            <li><a href="#" th:text="#{user.profile.favorites}"></a></li>
+            <li><a href="#" th:text="#{user.profile.friends}"></a></li>
+          </ul>
+          <ul class="uk-switcher uk-margin">
+			<th:block th:include="fragments/templates/user-view.html :: user-quizzes(${quizzes})"/>
+			<th:block th:include="fragments/templates/user-view.html :: user-favorites(${favorites}, ${isCurrentUser})"/>
+			<th:block th:include="fragments/templates/user-view.html :: user-friends(${friends}, ${isCurrentUser})"/>
+          </ul>
+        </article>
+      </div>
+    </div>
+    <!-- END: USER PROFILE -->
+	
+    <th:block th:include="fragments/footer.html :: mainFooter"/>
+</body>
+</html>

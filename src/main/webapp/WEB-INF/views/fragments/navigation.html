@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<!-- TOPNAV -->
+<th:block th:fragment="topnav">
+    <div id="navbar" class="uk-navbar-container" uk-sticky>
+      <div class="uk-container">
+        <nav class="uk-margin uk-navbar uk-light" uk-navbar>
+          <div class="uk-navbar-left">
+            <ul class="uk-navbar-nav">
+              <li>
+                <a id="app-title" th:href="@{/}" aria-expanded="false">
+                	<img th:src="@{/resources/img/icon.svg}" th:alt="#{app.name}" style="width: 1.25rem" /> [[#{app.name}]]
+               	</a>
+                <div class="uk-navbar-dropdown" uk-drop="mode: click; animation: reveal-top; animate-out: true"  sec:authorize="isAuthenticated()">
+                  <ul class="uk-nav uk-navbar-dropdown-nav">
+                    <li class="uk-active"><a href="#">Active</a></li>
+                    <li class="uk-parent">
+                      <a href="#">Parent</a>
+                      <ul class="uk-nav-sub">
+                        <li><a href="#">Sub item</a></li>
+                        <li><a href="#">Sub item</a></li>
+                      </ul>
+                    </li>
+                    <li class="uk-nav-header">Header</li>
+                    <li>
+                      <a href="#"><span class="uk-margin-small-right uk-icon" uk-icon="icon: table"></span> Item</a>
+                    </li>
+                    <li>
+                      <a href="#"><span class="uk-margin-small-right uk-icon" uk-icon="icon: thumbnails"></span> Item</a>
+                    </li>
+                    <li class="uk-nav-divider"></li>
+                    <li>
+                      <a href="#"><span class="uk-margin-small-right uk-icon" uk-icon="icon: heart"></span> Item</a>
+                    </li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="uk-navbar-right" sec:authorize="isAuthenticated()">
+            <ul class="uk-navbar-nav">
+              <li>
+                <a class="uk-navbar-item" href="#" aria-haspopup="true" aria-expanded="false">
+                  <img class="uk-border-circle" th:src="@{'/uploads/u/' + ${#authentication.getPrincipal().getUser().getImage()}}" width="30" height="30" th:alt="${'@' + #authentication.getPrincipal().getUser().getUsername()}" />
+                  <span uk-navbar-parent-icon></span>
+                </a>
+                <div class="uk-navbar-dropdown" uk-drop="mode: click; animation: reveal-top; animate-out: true; pos: bottom-right;">
+                  <ul class="uk-nav uk-navbar-dropdown-nav">
+                    <li><a class="dropdown-item" th:href="@{/u/{id}(id=${#authentication.getPrincipal().getUser().getUsername()})}" th:inline="text"><span class="fas fa-user-alt"></span> [[#{app.profile}]]</a></li>
+                    <li><a class="dropdown-item" th:href="@{/u/settings}" th:inline="text"><span class="fas fa-cog"></span> [[#{app.settings}]]</a></li>
+                    <li class="uk-nav-divider"></li>
+                    <li><a class="dropdown-item" href="#" th:inline="text" onclick="document.getElementById('form-logout').submit()"><span class="fas fa-power-off"></span> [[#{app.logout}]]</a></li>
+                  </ul>
+                </div>
+              </li>
+            </ul>
+		    <form th:action="@{/logout}" id="form-logout" method="POST">
+		        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+		    </form>
+          </div>
+        </nav>
+      </div>
+    </div>
+</th:block>
+
+</html>

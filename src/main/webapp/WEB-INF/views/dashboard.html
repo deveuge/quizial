@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<th:block th:include="fragments/head.html :: head(#{app.dashboard})"/>
+</head>
+<body>
+	<th:block th:include="fragments/navigation.html :: topnav" />
+	<th:block th:include="fragments/alerts.html :: alerts"/>
+	
+	<!-- START: DASHBOARD -->
+    <div class="uk-section uk-section-muted quizzes-wrapper">
+      <div class="uk-container uk-container-center">
+      	<!-- Search filters -->
+        <div class="uk-child-width-expand" uk-grid>
+          <div>
+            <button href="#toggle-search-filters" class="uk-button uk-button-default" type="button" uk-toggle="target: #toggle-search-filters; animation: uk-animation-fade" th:text="#{dashboard.filter.toggle}"></button>
+          </div>
+          <div class="uk-text-right">
+          	<a th:href="@{/q/new}" class="uk-button uk-button-primary" th:text="#{button.quiz.create}"></a>
+          </div>
+        </div>
+        <div id="toggle-search-filters" class="uk-card uk-card-default uk-card-body uk-margin-small" hidden>
+          <form th:action="@{/search}" method="POST" th:object="${filter}" class="uk-form-horizontal uk-margin-large" id="form-search">
+            <div class="uk-margin">
+              <label class="uk-form-label" for="query" th:text="#{dashboard.filter.query}"></label>
+              <div class="uk-form-controls">
+                <input class="uk-input" id="query" name="query" th:field="*{query}" type="text" th:placeholder="#{dashboard.filter.query}" defaultValue=""/>
+              </div>
+            </div>
+
+            <div class="uk-margin">
+              <label class="uk-form-label" th:text="#{dashboard.filter.category}"></label>
+	          <div class="uk-form-controls">
+	            <select class="uk-select" th:field="*{category}" defaultValue="">
+	            	<option value="" th:text="#{dashboard.filter.category.empty}"></option>
+					<option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.description}"></option>
+	            </select>
+	          </div>
+            </div>
+
+            <div class="uk-margin">
+              <label class="uk-form-label" for="form-horizontal-select" th:text="#{dashboard.filter.sort}"></label>
+              <div class="uk-form-controls">
+                <select class="uk-select" id="form-horizontal-select" defaultValue="">
+                  <option>Lastest</option>
+                  <option>Most popular</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="uk-text-right">
+            	<button type="button" class="uk-button uk-button-default" th:text="#{dashboard.filter.reset}" onclick="resetForm('form-search')"></button>
+	            <button type="submit" class="uk-button uk-button-primary" th:text="#{dashboard.filter.search}"></button>
+          	</div>
+          </form>
+        </div>
+        
+        <!-- Results -->
+        <ul class="uk-subnav uk-subnav-pill" uk-switcher>
+	        <li th:each="quizSection : ${allQuizzes}">
+	        	<a href="#" th:text="#{'dashboard.quizzes.tab.' + ${quizSection.searchType.number}}"></a>
+	        </li>
+        </ul>
+        <ul class="uk-switcher uk-margin">
+          <li th:each="quizSection : ${allQuizzes}" th:fragment="quizzes-container">
+	        <div th:id="${quizSection.name}">
+	            <div class="uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid uk-height-match="target: > div > .uk-card">
+	              <div th:each="quiz : ${quizSection.quizzes}">
+	                <div class="uk-card uk-card-default">
+						<div class="uk-card-media-top uk-cover-container">
+							<div class="uk-inline-clip uk-transition-toggle" tabindex="0">
+								<img class="uk-transition-scale-up uk-transition-opaque" th:src="@{'/uploads/q/' + ${quiz.fullImage}}" th:alt="${quiz.name}" />
+							</div>
+						</div>
+						<div class="uk-card-body uk-position-relative">
+							<h3 class="uk-card-title uk-margin-small-bottom"
+								th:text="${quiz.name}" th:title="${quiz.name}"></h3>
+							<p class="uk-margin-remove-top uk-margin-medium-bottom"
+								th:text="${quiz.description}"></p>
+						</div>
+						<div class="uk-card-footer uk-position-bottom">
+							<a th:href="@{/q/{id}(id=${quiz.id})}"
+								class="uk-button uk-margin-right uk-margin-bottom uk-button-primary uk-position-bottom-right"
+								th:text="#{button.quiz.take}"></a>
+						</div>
+					</div>
+              	  </div>
+				</div>
+				<th:block th:include="fragments/pagination.html :: pagination(${quizSection.name}, ${quizSection.page})"/>
+	        </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- END: DASHBOARD -->
+	
+    <th:block th:include="fragments/footer.html :: mainFooter"/>
+</body>
+</html>

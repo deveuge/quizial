@@ -1,0 +1,21 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="alerts">
+	<div th:if="${alertMessage}" id="alerts" class="uk-position-top uk-padding-small">
+		<div th:classappend="'uk-alert-' + (${alertClass} ? ${alertClass} : info)" class="uk-margin-remove" uk-alert>
+			<a class="uk-alert-close" uk-close></a>
+			<span th:text="#{${alertMessage}}"></span>
+		</div>
+	</div>
+</th:block>
+
+<th:block th:fragment="validation">
+	<div id="alerts" class="uk-position-top uk-padding-small" th:if="${#fields.hasErrors('*')}">
+		<div class="uk-alert-danger uk-margin-remove" uk-alert>
+			<a class="uk-alert-close" uk-close></a>
+			<p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
+		</div>
+	</div>
+</th:block>
+
+</html>

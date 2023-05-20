@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+
+<!-- PAGINATION -->
+<th:block th:fragment="pagination(id, page)">
+	<div th:id="'pagination-' + ${id}" th:if="${page != null}" class="uk-margin-top">
+		<ul class="uk-pagination uk-flex-center uk-margin-remove-bottom" uk-margin>
+		    <li th:if="${!page.first}"><a th:href="@{${page.url}(page=0)}"><span uk-pagination-previous></span></a></li>
+		    <li th:each="i : ${page.pages}" th:if="${page.pages.size() > 1}" th:classappend="${i.current} ? 'uk-active' : ''">
+				<a th:if="${i.current}" th:text="${i.number}"></a>
+				<a th:if="${!i.current}" th:href="@{${page.url}(page=${i.number-1})}" th:text="${i.number}"></a>
+			</li>
+		    <li th:if="${!page.last}"><a th:href="@{${page.url}(page=${page.totalPages-1})}"><span uk-pagination-next></span></a></li>
+		</ul>
+	</div>
+	
+	
+	<script th:inline="javascript">
+	/*[+
+		$(function() {
+			$('#pagination-' + [[${id}]] + '>ul>li>a').on('click', function(e) {
+				e.preventDefault();
+				if($(this).attr('href') !== undefined)
+					$("#" + [[${id}]]).load($(this).attr('href'));
+			});
+		});
+	+]*/ 
+	</script>
+</th:block>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<th:block th:include="fragments/head.html :: head(#{app.403})" />
+</head>
+<body class="container-fluid" id="dashboard">
+	<th:block th:include="fragments/alerts.html :: alerts" />
+	<th:block th:include="fragments/navigation.html :: topnav" />
+
+	<div class="uk-width-1-1">
+		<div class="uk-container">
+			<div class="uk-grid-margin uk-grid uk-grid-stack">
+				<div class="uk-width-1-1 uk-width-1-2@s uk-margin-auto uk-first-column uk-text-center">
+					<img th:src="@{/resources/img/403.svg}" alt="#{app.name}" uk-img />
+					<h2 class="uk-margin-remove-top" th:text="#{app.403.text}"></h2>
+					<a th:href="@{/}" class="uk-button uk-button-primary" th:text="#{button.dashboard.return}"></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<th:block th:include="fragments/footer.html :: mainFooter"/>
+</body>
+</html>

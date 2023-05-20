@@ -1,0 +1,20 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:fragment="loginFooter">
+    <footer class="uk-position-bottom-center uk-position-small uk-visible@m uk-position-z-index">
+      <span class="uk-text-small uk-text-muted">© [[#{app.years(${#dates.format(#dates.createNow(), 'yyyy')})}]] [[#{app.name}]] | [[#{app.copyright}]] <a href="https://deveuge.github.io/" title="" target="_blank" data-uk-tooltip="" aria-describedby="uk-tooltip-1">deveuge</a></span>
+    </footer>
+</th:block>
+
+
+<th:block th:fragment="mainFooter">
+ 	<footer class="uk-section uk-section-small">
+      <div class="uk-container">
+        <p class="uk-text-small uk-text-center">
+          <span class="uk-text-small uk-text-muted">© [[#{app.years(${#dates.format(#dates.createNow(), 'yyyy')})}]] [[#{app.name}]] | [[#{app.copyright}]] <a href="https://deveuge.github.io/" title="" target="_blank" data-uk-tooltip="" aria-describedby="uk-tooltip-1">deveuge</a></span>
+        </p>
+      </div>
+    </footer>
+</th:block>
+
+</html>

@@ -1,0 +1,259 @@
+:root {
+  --primary-color: #1e87f0;
+  --bg-color: #f8f8f8;
+}
+
+input:focus::placeholder,
+textarea:focus::placeholder {
+  color: transparent;
+}
+
+select option:disabled {
+    background: #808080ab;
+    color: white !important;
+}
+
+::-webkit-scrollbar {
+  width: 0.55em;
+}
+::-webkit-scrollbar-track {
+  background: white;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-color);
+}
+
+/* === START: UI KIT  === */
+form .uk-container {
+	max-width: 1000px;
+}
+
+.uk-transition-toggle:hover .uk-transition-scale-up,
+.uk-transition-toggle:focus .uk-transition-scale-up,
+.uk-transition-active.uk-active .uk-transition-scale-up {
+  transform: scale(1.25, 1.25);
+}
+
+.uk-background-default {
+  background-color: white;
+}
+
+.uk-dropcap {
+	min-height: 100px;
+}
+
+#preloader {
+	position: fixed;
+	z-index: 9;
+}
+
+/* === END: UI KIT === */
+
+/* === START: APP-TITLE === */
+div#app-title {
+  filter: brightness(15) drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+a#app-title {
+  filter: brightness(15);
+}
+
+#app-title > img {
+  max-width: 10rem;
+  margin: auto;
+  display: block;
+}
+
+a#app-title > img {
+  max-width: 1.5rem;
+}
+
+#app-title > h1 {
+  margin: 0;
+}
+/* === END: APP-TITLE === */
+
+/* === START: NAVBAR === */
+#navbar {
+  background-color: var(--primary-color);
+}
+/* === END: NAVBAR === */
+
+/* === START: ALERTS === */
+#alerts {
+	font-size: 0.9rem;
+	z-index: 1000;
+	position: fixed !important;
+}
+
+#alerts p {
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+	#alerts {
+		position: sticky !important;
+	}
+}
+/* === END: ALERTS === */
+
+/* === START: QUIZZES === */
+.quizzes-wrapper .uk-inline-clip {
+  height: 12rem;
+  width: 100%;
+}
+
+.quizzes-wrapper.horizontal .uk-inline-clip {
+    max-height: 17rem;
+    width: 100%;
+    height: -webkit-fill-available;
+}
+
+.quizzes-wrapper .uk-inline-clip > img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.quizzes-wrapper .uk-card-body {
+	min-height: 125px;
+}
+
+.quizzes-wrapper .uk-card-body > h3,
+.quizzes-wrapper .uk-card-body > p {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+}
+
+.quizzes-wrapper .uk-card-body > p {
+  -webkit-line-clamp: 3;
+}
+
+.quizzes-wrapper .uk-card-footer > small {
+	height: 0;
+    display: block;
+    margin-top: -0.75rem;
+    opacity: 0.75;
+}
+
+/* === END: QUIZZES === */
+
+/* === START: QUIZ === */
+.quiz-answer-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-height: 20rem;
+}
+
+.quiz-answer-choices > label {
+  position: relative;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  cursor: pointer;
+  z-index: 0;
+}
+
+.quiz-answer-choices > label:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.quiz-answer-choices > label > .uk-radio:checked:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.quiz-answer-choices > label:not(:hover) > .uk-radio:before {
+  background: white;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 8%);
+}
+
+#quiz-upload-img {
+  opacity: 0.25;
+}
+
+.response-edit-img, 
+.question-edit-img {
+  display: flex;
+  flex-direction: column;
+}
+
+.question-edit-img > img {
+  max-height: 20rem;
+}
+
+.response-edit-img > img {
+  max-height: 10rem;
+}
+
+.response-edit-img > .uk-inline,
+.question-edit-img > .uk-inline {
+  display: flex;
+}
+
+.quiz-result,
+.quiz-question {
+  position: relative;
+}
+
+.quiz-result {
+  counter-increment: result-counter;
+}
+
+.quiz-question {
+  counter-increment: question-counter;
+}
+
+.quiz-result .form-title::before {	
+	content: counter(result-counter, upper-alpha)".";
+}
+.quiz-question .form-title::before {	
+	content: counter(question-counter)".";
+}
+
+.quiz-result .form-title::before,
+.quiz-question .form-title::before {
+    font-size: 1.75rem;
+    margin-left: 0.5rem;
+    font-weight: bold;
+}
+
+a[href="#modal-giphy"] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#giphy-gallery > #output > img {
+  height: 7rem;
+  object-fit: cover;
+  padding: 0.25rem;
+}
+
+#giphy-gallery > #output > p {
+	display: grid;
+    align-items: center;
+}
+/* === END: QUIZ === */
+
+.text-center {
+	text-align: center;
+}

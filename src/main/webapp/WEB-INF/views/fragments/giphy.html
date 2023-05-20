@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" >
+
+<!-- GIPHY SEARCH MODAL -->
+<th:block th:fragment="search-modal">
+	 <div id="modal-giphy" class="uk-flex-top" uk-modal>
+      <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <form id="gifs-form" class="ajax" th:action="@{/giphy/search}" method="POST" onsubmit="sendAjaxForm(event, '#gifs-form', '#output')">
+          <div class="uk-margin">
+            <div class="uk-inline uk-width-1-1">
+              <button type="submit" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: search"></button>
+              <input name="query" class="uk-input" type="text" th:placeholder="#{quiz.info.giphy.placeholder}" />
+            </div>
+          </div>
+          <div id="giphy-gallery" class="uk-grid-small uk-grid-match uk-child-width-expand@s uk-text-center" uk-overflow-auto uk-grid th:fragment="gifs-container">
+            <div id="output">
+		        <div th:replace="${results != null && !results.empty} ? 
+				        ~{fragments/giphy.html :: search-modal-results(${results}, ${page})} : 
+				        ~{fragments/giphy.html :: search-modal-no-results}">
+				</div>
+	        </div>
+          </div>
+        </form>
+      </div>
+    </div>
+	<script>
+		$(document).on("click", "#giphy-gallery > #output > img", function () {
+			let imgInput = $("a[href='#modal-giphy'].active").parent().find("input[type='text']");
+			imgInput.val($(this).attr("src"));
+			functions.updateImage(imgInput[0]);
+			$("#modal-giphy .uk-close").trigger("click");
+		});
+	</script>
+</th:block>
+
+<!-- GIPHY SEARCH MODAL - RESULTS -->
+<th:block th:fragment="search-modal-results(results, page)">
+	<th:block th:each="result : ${results}">
+	    <img class="uk-width-1-3@m" th:src="${result.url}" th:alt="${result.title}" />
+    </th:block>
+	<th:block th:include="fragments/pagination.html :: pagination('output', ${page})"/>
+</th:block>
+
+<!-- GIPHY SEARCH MODAL - NO RESULTS -->
+<th:block th:fragment="search-modal-no-results">
+	<p uk-alert th:text="#{quiz.giphy.noresults}"></p>
+</th:block>
+</html>

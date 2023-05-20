@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}">
+<head>
+	<th:block th:include="fragments/head.html :: head(#{app.quizzes})"/>
+</head>
+<body>
+	<th:block th:include="fragments/preloader.html :: preloader"/>
+	<th:block th:include="fragments/navigation.html :: topnav" />
+	<th:block th:include="fragments/alerts.html :: alerts"/>
+	
+    <form th:action="${isEdit} ? @{/q/edit} : @{/q/new}" th:object="${quiz}" method="POST" enctype="multipart/form-data" class="uk-section uk-section-muted">
+      
+      <!-- General info -->
+      <div class="uk-container uk-container-center">
+        <h2 class="uk-heading-line"><span th:text="#{quiz.info.general}"></span></h2>
+        <div class="js-upload uk-placeholder uk-height-medium uk-flex uk-flex-center uk-flex-middle uk-cover-container">
+          <img id="quiz-upload-img" th:src="@{'/uploads/q/' + ${quiz.fullImage}}" alt="" uk-cover />
+		  <input type="hidden" th:field="*{image}"/>
+          <div>
+            <span uk-icon="icon: cloud-upload"></span>
+            <label for="image" th:text="#{quiz.info.image}"></label>
+            <div uk-form-custom>
+              <input id="image" th:field="*{imageFile}" type="file" accept="image/*" onchange="document.getElementById('quiz-upload-img').src = window.URL.createObjectURL(this.files[0])" />
+              <span class="uk-link" th:text="#{quiz.info.upload}"></span>
+            </div>
+          </div>
+        </div>
+        <div class="uk-margin">
+          <label for="name" class="uk-form-label uk-hidden" th:text="#{quiz.info.title}"></label>
+          <input id="name" th:field="*{name}" minlength="10" maxlength="255" type="text" th:placeholder="#{quiz.info.title}" class="uk-input uk-form-width-medium uk-form-large uk-width-1-1" required autofocus />
+          <input type="hidden" th:if="${isEdit}" th:field="*{id}"/>
+        </div>
+        <div class="uk-margin">
+          <label for="description" class="uk-form-label uk-hidden" th:text="#{quiz.info.description}"></label>
+          <textarea id="description" th:field="*{description}" minlength="10" maxlength="1000" class="uk-textarea" rows="3" th:placeholder="#{quiz.info.description}" required></textarea>
+        </div>
+        <div class="uk-margin">
+          <label class="uk-form-label" th:text="#{dashboard.filter.category}"></label>
+          <div class="uk-form-controls">
+            <select class="uk-select" th:field="*{category}" required>
+            	<option value="" th:text="#{dashboard.filter.category.empty}"/>
+				<option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.description}"></option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Results -->
+        <h2 class="uk-heading-line"><span th:text="#{quiz.info.results}"></span></h2>
+        <div id="results">
+	        <th:block th:include="fragments/templates/quiz-edit.html :: quiz-results(${quiz})"/>
+        	<button id="add-result" type="button" class="uk-button uk-button-default uk-width-1-1" th:text="#{quiz.info.result.add}"></button>
+		</div>
+        <!-- Questions -->
+        <h2 class="uk-heading-line"><span th:text="#{quiz.info.questions}"></span></h2>
+        <div id="questions">
+        	<th:block th:include="fragments/templates/quiz-edit.html :: quiz-questions(${quiz})"/>
+        </div>
+        <button id="add-question" type="button" class="uk-button uk-button-default uk-width-1-1 uk-margin-top" th:text="#{quiz.info.question.add}"></button>
+		
+        <!-- Controls -->
+        <div class="uk-grid-small uk-margin uk-grid" uk-grid>
+          <div class="uk-width-1-3@s">
+            <a th:href="${isEdit} ? @{/q/{id}(id=${quiz.id})} : @{/}" class="uk-button uk-button-default uk-button-large uk-width-1-1"><span uk-icon="chevron-left"></span> [[#{button.back}]]</a>
+          </div>
+          <div class="uk-width-1-3@s">
+            <a href="#modal-delete" uk-toggle th:if="${isEdit}" class="uk-button uk-button-danger uk-button-large uk-width-1-1"><span uk-icon="trash"></span> [[#{button.quiz.delete}]]</a>
+          </div>
+          <div class="uk-width-1-3@s">
+            <button type="submit" class="uk-button uk-button-primary uk-button-large uk-width-1-1"><span uk-icon="pull"></span> [[#{button.quiz.save}]]</button>
+          </div>
+        </div>
+      </div>
+      
+	  <th:block th:include="fragments/alerts.html :: validation"/>
+		<script th:if="${isEdit == null && !#fields.hasErrors('*')}">
+			$(function () {
+				functions.initializeQuiz();
+			});
+		</script>
+    </form>
+
+    <!-- Giphy search-->
+    <th:block th:include="fragments/giphy.html :: search-modal"/>
+    
+	<th:block th:include="fragments/templates/quiz-edit.html :: quiz-tmpl"/>
+	<th:block th:include="fragments/templates/quiz-view.html :: quiz-delete(${quiz})"/>
+	<script type="text/javascript" th:src="@{/resources/js/quiz.js}"></script>
+	
+    <th:block th:include="fragments/footer.html :: mainFooter"/>
+</body>
+</html>

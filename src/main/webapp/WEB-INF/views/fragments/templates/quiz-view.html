@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" >
+
+<!-- QUIZ HEADER -->
+<th:block th:fragment="quiz-header(quiz)">
+	<div class="uk-height-medium uk-background-cover" th:data-src="@{'/uploads/q/' + ${quiz.fullImage}}" id="quiz-header" uk-img></div>
+	<div class="uk-text-right uk-text-small"><a th:href="@{/u/{id}(id=${quiz.user})}" th:text="'@' + ${quiz.user}"></a> - [[${#dates.format(quiz.createdAt, 'dd/MM/yyyy')}]]</div>
+	<div class="uk-grid uk-grid-medium uk-flex uk-flex-middle" data-uk-grid="">
+	  <div class="uk-width-expand">
+	    <h1 class="uk-heading-line"><span th:text="${quiz.name}"></span></h1>
+	  </div>
+	  <div class="uk-width-auto">
+	    <div class="uk-inline">
+	      <a href="#" class="uk-icon-button uk-icon" data-uk-icon="icon:more-vertical" aria-haspopup="true" aria-expanded="false"
+	        ><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+	          <circle cx="10" cy="3" r="2"></circle>
+	          <circle cx="10" cy="10" r="2"></circle>
+	          <circle cx="10" cy="17" r="2"></circle></svg
+	      ></a>
+	      <div data-uk-dropdown="mode:click; pos: bottom-right; boundary:#author-wrap" class="uk-dropdown" style="max-width: 1873px; top: 46px; left: -164px">
+	        <ul class="uk-nav uk-dropdown-nav">
+	          <th:block th:if="${quiz.userOwner || #authorization.expression('hasRole(''ADMIN'')')}">
+		          <li class="uk-nav-header" th:text="#{quiz.action.title}"></li>
+		          <li><a th:href="@{/q/{id}/edit(id=${quiz.id})}" th:text="#{quiz.action.edit}"></a></li>
+		          <li><a href="#modal-delete" th:text="#{quiz.action.delete}" uk-toggle></a></li>
+	          </th:block>
+	          <th:block th:if="${!quiz.userOwner || #authorization.expression('hasRole(''ADMIN'')')}">
+	          	<li><a href="#" th:text="#{quiz.action.report}"></a></li>
+	          </th:block>
+	        </ul>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+	<blockquote class="uk-text-default uk-text-muted uk-dropcap" th:text="${quiz.description}">
+	</blockquote>
+	
+	<th:block th:include="fragments/templates/quiz-view.html :: quiz-delete(${quiz})"/>
+</th:block>
+
+<!-- QUIZ FOOTER -->
+<th:block th:fragment="quiz-footer(quiz, form)">
+	<!-- Author -->
+	<section class="uk-section uk-section-small">
+      <div id="author-wrap" class="uk-container uk-container-small">
+        <div class="uk-grid uk-grid-medium uk-flex uk-flex-middle" data-uk-grid>
+          <div class="uk-width-auto">
+            <img th:src="@{'/uploads/u/' + ${quiz.userImage}}" width="80" height="80" alt="" class="uk-border-circle" />
+          </div>
+          <div class="uk-width-expand">
+            <h4 class="uk-margin-remove uk-text-bold">[[${quiz.user}]]</h4>
+            <span class="uk-text-small uk-text-muted">Ut enim ad minim veniam, quis nostrud exercitation.</span>
+          </div>
+          <div class="uk-width-auto">
+            <div class="uk-inline">
+              <a href="#" class="uk-icon-button" data-uk-icon="icon:more-vertical"></a>
+              <div data-uk-dropdown="mode:click; pos: bottom-right; boundary:#author-wrap">
+                <ul class="uk-nav uk-dropdown-nav">
+                  <li class="uk-nav-header">Actions</li>
+                  <li><a th:href="@{/u/{id}(id=${quiz.user})}">View profile</a></li>
+                  <li><a href="#">Follow this author</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Next quiz -->
+    <div class="uk-section uk-section-xsmall uk-section-default uk-position-bottom uk-position-sticky" style="border: 1px solid #f2f2f2">
+      <div class="uk-container uk-container-small uk-text-small">
+        <div class="uk-grid" data-uk-grid="">
+          <div class="uk-width-expand uk-first-column">
+            <a th:if="${form.nextQuizId}" th:href="@{/q/{id}(id=${form.nextQuizId})}" class="uk-link-reset">
+              <span data-uk-icon="icon: arrow-right" class="uk-icon"></span>
+              <strong th:text="#{quiz.info.next}"></strong> <span class="uk-visible@s">- [[${form.nextQuizTitle}]]</span>
+            </a>
+          </div>
+          <div class="uk-width-auto uk-text-right">
+            <a th:href="'https://www.facebook.com/sharer/sharer.php?u=' + ${#httpServletRequest.requestURL}" target="_blank" class="uk-icon-link uk-icon" data-uk-icon="icon: facebook"></a>
+            <a th:href="'http://www.twitter.com/share?url=' + ${#httpServletRequest.requestURL}" target="_blank" class="uk-icon-link uk-icon" data-uk-icon="icon: twitter"></a>
+            <a th:href="'http://pinterest.com/pin/create/button/?url=' + ${#httpServletRequest.requestURL} + '&media=' + ${#httpServletRequest.requestURL}" target="_blank" class="uk-icon-link uk-icon" data-uk-icon="icon: pinterest"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+</th:block>
+
+<!-- QUIZ DELETE MODAL -->
+<th:block th:fragment="quiz-delete(quiz)">
+	<div id="modal-delete" class="uk-flex-top" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+	        <button class="uk-modal-close-default" type="button" uk-close></button>
+	        <p th:text="#{quiz.confirm.delete}"></p>
+			<form th:action="@{/q/{id}/delete(id=${quiz.id})}" method="POST">
+				<button type="submit" class="uk-button uk-button-danger uk-button-large uk-width-1-1"><span uk-icon="trash"></span> [[#{button.quiz.delete}]]</button>
+			</form>
+	    </div>
+	</div>
+</th:block>
+</html>

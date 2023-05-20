@@ -1,0 +1,26 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(title)">
+	<title th:text="#{app.name} + ' | ' + ${title}"></title>
+	<link rel="icon" type="image/svg" th:href="@{/resources/img/icon.svg}"></link>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"></meta>
+		
+	<!-- META TAGS -->
+	<meta charset="UTF-8"></meta>
+	<meta name="author" content="Deveuge"></meta>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+	<!-- CSRF -->
+	<meta id="_csrf" name="_csrf" th:content="${_csrf.token}" />
+	<meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}" />
+	
+	<!-- CSS IMPORTS -->
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/lib/uikit.min.css}"></link>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"></link>
+	
+	<!-- JS IMPORTS -->
+	<script type="text/javascript" th:src="@{/resources/js/lib/jquery-3.5.1.min.js}"></script>
+	<script type="text/javascript" th:src="@{/resources/js/lib/jquery.tmpl.min.js}"></script>
+	<script type="text/javascript" th:src="@{/resources/js/lib/uikit.min.js}"></script>
+	<script type="text/javascript" th:src="@{/resources/js/lib/uikit-icons.min.js}"></script>
+	<script type="text/javascript" th:src="@{/resources/js/script.js}"></script>
+</head>
+</html>

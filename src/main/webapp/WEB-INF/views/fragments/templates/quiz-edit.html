@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:lang="${#locale.language}" >
+
+<!-- NEW DYNAMIC TEMPLATES - XJQUERY - QUESTION/ANSWER/RESULT -->
+<th:block th:fragment="quiz-tmpl">
+	<script id="template-question" type="text/x-jQuery-tmpl">
+		<div class="quiz-question uk-grid-divider" data-id="${lastQuestionId}" uk-grid>
+          <div class="uk-width-1-3@m question-edit-img">
+            <img class="quiz-answer-img" th:src="@{/resources/img/question.gif}" th:onerror="|this.src = '@{/resources/img/question.gif}'|" />
+            <div class="uk-inline">
+              <span class="uk-form-icon" uk-icon="icon: link"></span>
+              <input type="text" name="questions[${lastQuestionId}].image" class="uk-input" placeholder="Image URL" onkeyup="functions.updateImage(this)" />
+              <input type="hidden" name="questions[${lastQuestionId}].id"/>
+			  <a href="#modal-giphy" uk-toggle class="uk-button uk-button-small uk-button-primary" th:uk-tooltip="#{quiz.info.giphy}"><span uk-icon="camera"></span></a>
+            </div>
+          </div>
+          <div class="uk-width-expand@m">
+            <div class="uk-margin">
+              <div class="uk-grid-small" uk-grid>
+                 <div class="uk-width-expand uk-inline uk-margin-bottom">
+					<div class="uk-inline uk-width-expand"> 
+				  		<span class="form-title uk-form-icon"></span>
+                  		<input type="text" name="questions[${lastQuestionId}].name" class="uk-input uk-form-large uk-width-1-1" th:placeholder="#{quiz.info.question.title}" required maxlength="255"/>
+                  		<label class="uk-form-label uk-hidden" th:text="#{quiz.info.question.title}"></label>
+					</div>                
+				</div>
+                <div>
+                  <button type="button" class="delete-question uk-button uk-button-danger uk-button-large" th:uk-tooltip="#{quiz.info.question.remove}"><span uk-icon="trash"></span></button>
+                </div>
+              </div>
+              <!-- Answers -->
+              <div class="uk-form-controls quiz-answer-choices">
+                <div class="quiz-answer uk-grid-small" data-id="0" uk-grid>
+				  <input type="hidden" name="questions[${lastQuestionId}].answers[0].id" />
+                  <div class="uk-width-expand@s">
+                    <input type="text" name="questions[${lastQuestionId}].answers[0].name" class="uk-input" th:placeholder="#{quiz.info.answer.title}" required maxlength="255" />
+                  </div>
+                  <div class="uk-width-1-6@s">
+                    <select name="questions[${lastQuestionId}].answers[0].resultLetter" class="answer-results uk-select" th:uk-tooltip="#{quiz.info.result}">
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                    </select>
+                  </div>
+                  <div>
+                    <button type="button" class="delete-answer uk-button uk-button-danger" th:uk-tooltip="#{quiz.info.answer.remove}"><span uk-icon="trash"></span></button>
+                  </div>
+                </div>
+                <button type="button" class="add-answer uk-button uk-button-default uk-width-1-1 uk-margin-top" th:text="#{quiz.info.answer.add}"></button>
+              </div>
+            </div>
+          </div>
+        </div>
+	</script>
+
+	<script id="template-answer" type="text/x-jQuery-tmpl">
+				<div class="quiz-answer uk-grid-small" data-id="${answerId}" uk-grid>
+				  <input type="hidden" name="questions[${questionId}].answers[${answerId}].id" />
+                  <div class="uk-width-expand@s">
+                    <input type="text" name="questions[${questionId}].answers[${answerId}].name" class="uk-input" th:placeholder="#{quiz.info.answer.title}" required maxlength="255" />
+                  </div>
+                  <div class="uk-width-1-6@s">
+                    <select name="questions[${questionId}].answers[${answerId}].resultLetter" class="answer-results uk-select" th:uk-tooltip="#{quiz.info.result}">
+                      <option value="A">A</option>
+                      <option value="B">B</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                    </select>
+                  </div>
+                  <div>
+                    <button type="button" class="delete-answer uk-button uk-button-danger" th:uk-tooltip="#{quiz.info.answer.remove}"><span uk-icon="trash"></span></button>
+                  </div>
+                </div>
+	</script>
+
+	<script id="template-result" type="text/x-jQuery-tmpl">
+		<div class="quiz-result uk-grid-divider uk-margin" data-id="${lastResultId}" uk-grid>
+		  <input type="hidden" name="results[${lastResultId}].resultLetter" />
+          <div class="uk-width-1-3@m response-edit-img">
+            <img class="quiz-answer-img" th:src="@{/resources/img/question.gif}" th:onerror="|this.src = '@{/resources/img/question.gif}'|" />
+            <div class="uk-inline">
+              <span class="uk-form-icon" uk-icon="icon: link"></span>
+              <input type="text" name="results[${lastResultId}].image" class="uk-input" placeholder="Image URL" onkeyup="functions.updateImage(this)" />
+              <a href="#modal-giphy" uk-toggle class="uk-button uk-button-small uk-button-primary" th:uk-tooltip="#{quiz.info.giphy}"><span uk-icon="camera"></span></a>
+            </div>
+          </div>
+          <div class="uk-width-expand@m">
+            <div class="uk-grid-small" uk-grid>
+              <div class="uk-width-expand uk-inline uk-margin-bottom">
+				<div class="uk-inline uk-width-expand"> 
+                	<label class="uk-form-label uk-hidden" th:text="#{quiz.info.result.title}"></label>
+            		<span class="form-title uk-form-icon"></span>
+                	<input type="text" name="results[${lastResultId}].name" class="uk-input uk-form-width-medium uk-form-large uk-width-1-1" th:placeholder="#{quiz.info.result.title}" required  maxlength="255"/>
+					<input type="hidden" name="results[${lastResultId}].id" />
+				</div>
+			  </div>              
+			  <div>
+                <button type="button" class="delete-result uk-button uk-button-danger uk-button-large" th:uk-tooltip="#{quiz.info.result.remove}"><span uk-icon="trash"></span></button>
+              </div>
+            </div>
+            <label class="uk-form-label uk-hidden" th:text="#{quiz.info.result.description}"></label>
+            <textarea name="results[${lastResultId}].description" maxlength="1200" class="uk-textarea" rows="5" th:placeholder="#{quiz.info.result.description}" required></textarea>
+          </div>
+        </div>
+	</script>
+</th:block>
+
+<!-- EXISTING DATA - THYMELEAF TEMPLATES - RESULTS/QUESTIONS -->
+<th:block th:fragment="quiz-results(quiz)">
+	 <th:block th:each="result,i : *{results}">
+	<div class="quiz-result uk-grid-divider uk-margin" th:data-id="${i.index}" uk-grid>
+		<input type="hidden" th:field="${quiz.results[__${i.index}__].id}" />
+		<input type="hidden" th:field="${quiz.results[__${i.index}__].resultLetter}" />
+		<div class="uk-width-1-3@m response-edit-img">
+			<img class="quiz-answer-img" th:src="${result.image}" th:onerror="|this.src = '@{/resources/img/question.gif}'|" />
+			<div class="uk-inline">
+				<span class="uk-form-icon" uk-icon="icon: link"></span> 
+				<input type="text" th:field="${quiz.results[__${i.index}__].image}" class="uk-input" placeholder="Image URL" onkeyup="functions.updateImage(this)" />
+				<a href="#modal-giphy" uk-toggle class="uk-button uk-button-small uk-button-primary" th:uk-tooltip="#{quiz.info.giphy}"><span uk-icon="camera"></span></a>
+			</div>
+		</div>
+		<div class="uk-width-expand@m">
+			<div class="uk-grid-small" uk-grid>
+				<div class="uk-width-expand uk-inline uk-margin-bottom">
+					<div class="uk-inline uk-width-expand">
+						<label class="uk-form-label uk-hidden"
+							th:text="#{quiz.info.result.title}"></label> 
+							<span class="form-title uk-form-icon"></span> 
+							<input type="text" th:field="${quiz.results[__${i.index}__].name}" class="uk-input uk-form-width-medium uk-form-large uk-width-1-1"
+							th:placeholder="#{quiz.info.result.title}" maxlength="255" required /> 
+					</div>
+				</div>
+				<div>
+					<button type="button" class="delete-result uk-button uk-button-danger uk-button-large" th:uk-tooltip="#{quiz.info.result.remove}">
+						<span uk-icon="trash"></span>
+					</button>
+				</div>
+			</div>
+			<label class="uk-form-label uk-hidden" th:text="#{quiz.info.result.description}"></label>
+			<textarea th:field="${quiz.results[__${i.index}__].description}" maxlength="1200" class="uk-textarea" rows="5" th:placeholder="#{quiz.info.result.description}" required>[[${result.description}]]</textarea>
+		</div>
+	</div>
+	</th:block>
+</th:block>
+
+<th:block th:fragment="quiz-questions(quiz)">
+	<th:block th:each="question,i : *{questions}">
+        <div class="quiz-question uk-grid-divider" th:data-id="${i.index}" uk-grid>
+          <input type="hidden" th:field="${quiz.questions[__${i.index}__].id}"/>
+          <div class="uk-width-1-3@m question-edit-img">
+            <img class="quiz-answer-img" th:src="${question.image}" th:onerror="|this.src = '@{/resources/img/question.gif}'|" />
+            <div class="uk-inline">
+              <span class="uk-form-icon" uk-icon="icon: link"></span>
+              <input type="text" th:field="${quiz.questions[__${i.index}__].image}" class="uk-input" placeholder="Image URL" onkeyup="functions.updateImage(this)"/>
+			  <a href="#modal-giphy" uk-toggle class="uk-button uk-button-small uk-button-primary" th:uk-tooltip="#{quiz.info.giphy}"><span uk-icon="camera"></span></a>
+            </div>
+          </div>
+          <div class="uk-width-expand@m">
+            <div class="uk-margin">
+              <div class="uk-grid-small" uk-grid>
+                 <div class="uk-width-expand uk-inline uk-margin-bottom">
+					<div class="uk-inline uk-width-expand"> 
+				  		<span class="form-title uk-form-icon"></span>
+                  		<input type="text" th:field="${quiz.questions[__${i.index}__].name}" class="uk-input uk-form-large uk-width-1-1" th:placeholder="#{quiz.info.question.title}" maxlength="255" required/>
+                  		<label class="uk-form-label uk-hidden" th:text="#{quiz.info.question.title}"></label>
+					</div>                
+				</div>
+                <div>
+                  <button type="button" class="delete-question uk-button uk-button-danger uk-button-large" th:uk-tooltip="#{quiz.info.question.remove}"><span uk-icon="trash"></span></button>
+                </div>
+              </div>
+        		
+        		<th:block th:each="answer,j : ${question.answers}">
+        		<div class="quiz-answer uk-grid-small" th:data-id="${j.index}" uk-grid>
+				  <input type="hidden" th:field="${quiz.questions[__${i.index}__].answers[__${j.index}__].id}"/>
+				  <div class="uk-width-expand@s">
+				    <input type="text" th:field="${quiz.questions[__${i.index}__].answers[__${j.index}__].name}" class="uk-input" th:placeholder="#{quiz.info.answer.title}" maxlength="255" required/>
+				  </div>
+				  <div class="uk-width-1-6@s">
+				    <select th:field="${quiz.questions[__${i.index}__].answers[__${j.index}__].resultLetter}" class="answer-results uk-select" th:uk-tooltip="#{quiz.info.result}">
+				      <option value="A">A</option>
+				      <option value="B">B</option>
+				      <option value="C">C</option>
+				      <option value="D">D</option>
+				    </select>
+				  </div>
+				  <div>
+				    <button type="button" class="delete-answer uk-button uk-button-danger" th:uk-tooltip="#{quiz.info.answer.remove}"><span uk-icon="trash"></span></button>
+				  </div>
+				</div>
+				</th:block>
+	
+        		<button type="button" class="add-answer uk-button uk-button-default uk-width-1-1 uk-margin-top" th:text="#{quiz.info.answer.add}"></button>
+            </div>
+          </div>
+        </div>
+	</th:block>
+</th:block>
+</html>
