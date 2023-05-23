@@ -76,6 +76,7 @@ public class PersistenceJpaConfig {
 	private Properties additionalProperties() {
 		Properties additionalProperties = new Properties();
 		additionalProperties.setProperty("hibernate.hbm2ddl.auto", properties.getProperty("database.ddl"));
+		additionalProperties.setProperty("hibernate.hbm2ddl.schema_filter_provider", properties.getProperty("database.ddl.schema_filter"));
 		additionalProperties.setProperty("hibernate.show_sql", properties.getProperty("database.log"));
 		return additionalProperties;
 	}

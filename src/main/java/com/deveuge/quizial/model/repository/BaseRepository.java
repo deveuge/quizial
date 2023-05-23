@@ -38,7 +38,7 @@ public abstract class BaseRepository<T> {
      * @return {@link Page} Paginated search result.
      */
 	public Page<T> find(Session session, BaseFilter filter, Pageable page) {
-		CriteriaQuery<T> criteria = createBaseCriteria(session, filter, page);
+		CriteriaQuery<T> criteria = createBaseCriteria(session, filter);
 	    TypedQuery<T> query = createTypedQuery(session, criteria, page);
 	    
 	    return PageableExecutionUtils.getPage(query.getResultList(), page, () -> count(session, criteria));
@@ -48,15 +48,14 @@ public abstract class BaseRepository<T> {
 	 * Generic method that creates the search criteria query.
 	 * @param session {@link Session} Hibernate session.
 	 * @param filter {@link BaseFilter} Filter object to be used for setting the search conditions.
-	 * @param page {@link Pageable} Object for pagination information.
 	 * @return {@link CriteriaQuery}
 	 */
-	private CriteriaQuery<T> createBaseCriteria(Session session, BaseFilter filter, Pageable page) {
+	private CriteriaQuery<T> createBaseCriteria(Session session, BaseFilter filter) {
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 	    CriteriaQuery<T> criteria = builder.createQuery(clazz);
 	    Root<T> root = criteria.from(clazz);
 
-	    List<Predicate> predicates = getFilterConditions(builder, root, filter);
+	    List<Predicate> predicates = getFilterConditions(builder, criteria, root, filter);
 	    if (!predicates.isEmpty()) {
 		    criteria.select(root).where(predicates.toArray(new Predicate[predicates.size()]));
 	    }
@@ -108,11 +107,11 @@ public abstract class BaseRepository<T> {
 	
 	/**
 	 * Creates the list of predicates for filtering by the given criteria.
-	 * @param builder {@link CriteriaBuilder} Used to construct criteria queries. 
+	 * @param builder {@link CriteriaBuilder} Used to construct criteria queries.
+	 * @param criteria {@link CriteriaQuery} Original criteria query.
 	 * @param root {@link Root} Root type entity in the from clause.
 	 * @param filter {@link BaseFilter} Filter object to be used for setting the search conditions.
-	 * @return List<{@link Predicate}>
 	 */
-	protected abstract List<Predicate> getFilterConditions(CriteriaBuilder builder, Root<T> root, BaseFilter filter);
+	protected abstract List<Predicate> getFilterConditions(CriteriaBuilder builder, CriteriaQuery<T> criteria, Root<T> root, BaseFilter filter);
 	
 }

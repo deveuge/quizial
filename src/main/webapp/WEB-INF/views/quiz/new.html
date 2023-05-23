@@ -35,7 +35,6 @@
           <textarea id="description" th:field="*{description}" minlength="10" maxlength="1000" class="uk-textarea" rows="3" th:placeholder="#{quiz.info.description}" required></textarea>
         </div>
         <div class="uk-margin">
-          <label class="uk-form-label" th:text="#{dashboard.filter.category}"></label>
           <div class="uk-form-controls">
             <select class="uk-select" th:field="*{category}" required>
             	<option value="" th:text="#{dashboard.filter.category.empty}"/>

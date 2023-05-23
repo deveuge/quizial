@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.deveuge.quizial.enums.Alert;
 import com.deveuge.quizial.enums.QuizSearchType;
 import com.deveuge.quizial.enums.VerificationType;
+import com.deveuge.quizial.model.entity.Quiz_;
 import com.deveuge.quizial.model.entity.User;
 import com.deveuge.quizial.model.entity.VerificationToken;
 import com.deveuge.quizial.model.service.CategoryService;
@@ -34,6 +36,7 @@ import com.deveuge.quizial.model.service.VerificationTokenService;
 import com.deveuge.quizial.util.Constants;
 import com.deveuge.quizial.util.SecurityUtils;
 import com.deveuge.quizial.util.ViewUtils;
+import com.deveuge.quizial.util.aspect.AuditableColumns_;
 import com.deveuge.quizial.util.aspect.MethodLogging;
 import com.deveuge.quizial.util.pagination.PageRender;
 import com.deveuge.quizial.view.dto.QuizDTO;
@@ -235,13 +238,26 @@ public class IndexController {
 		case USER:
 			return (filter == null) ? null : quizService.find(filter, pageRequest);
 		case POPULAR:
-			return quizService.find(new QuizFilter(), pageRequest); // TODO
+			filter = QuizFilter.builder()
+				.orderField(Quiz_.FAVORITES_COUNT)
+				.orderDirection(Direction.DESC)
+				.build();
+			break;
 		case NEW:
-			return quizService.find(new QuizFilter(), pageRequest); // TODO
+			filter = QuizFilter.builder()
+				.orderField(AuditableColumns_.CREATED_AT)
+				.orderDirection(Direction.DESC)
+				.build();
+			break;
 		case FRIENDS:
-			return quizService.find(new QuizFilter(), pageRequest); // TODO
+			filter = QuizFilter.builder()
+				.userFriends(SecurityUtils.getUsername())
+				.orderField(AuditableColumns_.CREATED_AT)
+				.orderDirection(Direction.DESC)
+				.build();
+			break;
 		}
-		return null;
+		return quizService.find(filter, pageRequest);
 	}
 	
 	@NoArgsConstructor

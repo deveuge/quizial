@@ -20,6 +20,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SecondaryTable;
 import javax.persistence.Transient;
 
 import org.springframework.util.StringUtils;
@@ -42,6 +44,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditableEntityListener.class)
+@SecondaryTable(name = "vw_quiz_favorites", pkJoinColumns = {@PrimaryKeyJoinColumn(name = "id", referencedColumnName= "id")})
 public class Quiz extends AuditableColumns implements Serializable, AuditableEntity {
 	
 	private static final long serialVersionUID = -8935500629795822305L;
@@ -78,6 +81,9 @@ public class Quiz extends AuditableColumns implements Serializable, AuditableEnt
     @ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "favorite", joinColumns = @JoinColumn(name = "quiz_id"), inverseJoinColumns = @JoinColumn(name = "user_username"))
 	private Set<User> favoriteUsers;
+    
+    @Column(table = "vw_quiz_favorites", name = "fav_count", updatable = false, insertable = false)
+    private Integer favoritesCount;
     
     @PrePersist
     private void prePersist() {
