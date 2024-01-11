@@ -4,32 +4,29 @@
 <!-- QUIZ HEADER -->
 <th:block th:fragment="quiz-header(quiz)">
 	<div class="uk-height-medium uk-background-cover" th:data-src="@{'/uploads/q/' + ${quiz.fullImage}}" id="quiz-header" uk-img></div>
-	<div class="uk-text-right uk-text-small"><a th:href="@{/u/{id}(id=${quiz.user})}" th:text="'@' + ${quiz.user}"></a> - [[${#dates.format(quiz.createdAt, 'dd/MM/yyyy')}]]</div>
+	<div class="uk-text-right uk-text-small"><a th:href="@{/u/{id}(id=${quiz.user})}" th:text="'@' + ${quiz.user}"></a> - [[${#dates.format(quiz.updatedAt, 'dd/MM/yyyy')}]]</div>
 	<div class="uk-grid uk-grid-medium uk-flex uk-flex-middle" data-uk-grid="">
 	  <div class="uk-width-expand">
 	    <h1 class="uk-heading-line"><span th:text="${quiz.name}"></span></h1>
 	  </div>
 	  <div class="uk-width-auto">
-	    <div class="uk-inline">
-	      <a href="#" class="uk-icon-button uk-icon" data-uk-icon="icon:more-vertical" aria-haspopup="true" aria-expanded="false"
-	        ><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-	          <circle cx="10" cy="3" r="2"></circle>
-	          <circle cx="10" cy="10" r="2"></circle>
-	          <circle cx="10" cy="17" r="2"></circle></svg
-	      ></a>
-	      <div data-uk-dropdown="mode:click; pos: bottom-right; boundary:#author-wrap" class="uk-dropdown" style="max-width: 1873px; top: 46px; left: -164px">
-	        <ul class="uk-nav uk-dropdown-nav">
-	          <th:block th:if="${quiz.userOwner || #authorization.expression('hasRole(''ADMIN'')')}">
-		          <li class="uk-nav-header" th:text="#{quiz.action.title}"></li>
-		          <li><a th:href="@{/q/{id}/edit(id=${quiz.id})}" th:text="#{quiz.action.edit}"></a></li>
-		          <li><a href="#modal-delete" th:text="#{quiz.action.delete}" uk-toggle></a></li>
-	          </th:block>
-	          <th:block th:if="${!quiz.userOwner || #authorization.expression('hasRole(''ADMIN'')')}">
-	          	<li><a href="#" th:text="#{quiz.action.report}"></a></li>
-	          </th:block>
-	        </ul>
-	      </div>
-	    </div>
+          <th:block th:if="${quiz.userOwner || #authorization.expression('hasRole(''ADMIN'')')}">
+		    <div class="uk-inline">
+		      <a href="#" class="uk-icon-button uk-icon" data-uk-icon="icon:more-vertical" aria-haspopup="true" aria-expanded="false"
+		        ><svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+		          <circle cx="10" cy="3" r="2"></circle>
+		          <circle cx="10" cy="10" r="2"></circle>
+		          <circle cx="10" cy="17" r="2"></circle></svg
+		      ></a>
+		      <div data-uk-dropdown="mode:click; pos: bottom-right; boundary:#author-wrap" class="uk-dropdown" style="max-width: 1873px; top: 46px; left: -164px">
+		        <ul class="uk-nav uk-dropdown-nav">
+			          <li class="uk-nav-header" th:text="#{quiz.action.title}"></li>
+			          <li><a th:href="@{/q/{id}/edit(id=${quiz.id})}" th:text="#{quiz.action.edit}"></a></li>
+			          <li><a href="#modal-delete" th:text="#{quiz.action.delete}" uk-toggle></a></li>
+		        </ul>
+		      </div>
+		    </div>
+          </th:block>
 	  </div>
 	</div>
 	<blockquote class="uk-text-default uk-text-muted uk-dropcap" th:text="${quiz.description}">
@@ -48,17 +45,16 @@
             <img th:src="@{'/uploads/u/' + ${quiz.userImage}}" width="80" height="80" alt="" class="uk-border-circle" />
           </div>
           <div class="uk-width-expand">
+            <span class="uk-text-small uk-text-muted" th:text="#{quiz.author}"></span>
             <h4 class="uk-margin-remove uk-text-bold">[[${quiz.user}]]</h4>
-            <span class="uk-text-small uk-text-muted">Ut enim ad minim veniam, quis nostrud exercitation.</span>
           </div>
           <div class="uk-width-auto">
             <div class="uk-inline">
               <a href="#" class="uk-icon-button" data-uk-icon="icon:more-vertical"></a>
               <div data-uk-dropdown="mode:click; pos: bottom-right; boundary:#author-wrap">
                 <ul class="uk-nav uk-dropdown-nav">
-                  <li class="uk-nav-header">Actions</li>
-                  <li><a th:href="@{/u/{id}(id=${quiz.user})}">View profile</a></li>
-                  <li><a href="#">Follow this author</a></li>
+                  <li class="uk-nav-header" th:text="#{user.profile.action.title}"></li>
+                  <li><a th:href="@{/u/{id}(id=${quiz.user})}" th:text="#{button.user.view}">View profile</a></li>
                 </ul>
               </div>
             </div>

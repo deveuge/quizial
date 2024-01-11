@@ -84,6 +84,8 @@ a#app-title > img {
 
 /* === START: ALERTS === */
 #alerts {
+    max-width: 1000px;
+    margin: auto;
 	font-size: 0.9rem;
 	z-index: 1000;
 	position: fixed !important;

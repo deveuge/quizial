@@ -1,6 +1,5 @@
 package com.deveuge.quizial.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,15 +11,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.deveuge.quizial.model.service.UserService;
 import com.deveuge.quizial.security.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
-	@Autowired
-	private UserService userService;
 
 	@Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
@@ -42,10 +37,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         	.and().logout().permitAll().invalidateHttpSession(true).deleteCookies("JSESSIONID").logoutSuccessUrl("/")
         	.and().rememberMe().key("remember-me-token").rememberMeParameter("remember-me")
         	.and().httpBasic();
-        
-        // TODO: Delete
-        //userService.save(new User("admin", "Admin", "admin@quizial.com", new BCryptPasswordEncoder().encode("admin"), "", Role.ADMIN, true));
-        //userService.save(new User("user", "User", "user@email.com", new BCryptPasswordEncoder().encode("user"), "", Role.USER, true));
     }
     
 	@Override

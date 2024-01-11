@@ -11,8 +11,8 @@ public class Constants {
 	public static final String ALERT_CLASS = "alertClass";
 	public static final String ALERT_MESSAGE = "alertMessage";
 	
-	public static final String RESULTS_DASHBOARD = "2";	// TODO: Set to 9
-	public static final int RESULTS_PER_PAGE = 2;		// TODO: Set to 5
+	public static final String RESULTS_DASHBOARD = "6";
+	public static final int RESULTS_PER_PAGE = 5;
 	public static final int RESULTS_FIRST_PAGE = 0;
 
 	private Constants() {

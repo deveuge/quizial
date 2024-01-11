@@ -11,29 +11,6 @@
                 <a id="app-title" th:href="@{/}" aria-expanded="false">
                 	<img th:src="@{/resources/img/icon.svg}" th:alt="#{app.name}" style="width: 1.25rem" /> [[#{app.name}]]
                	</a>
-                <div class="uk-navbar-dropdown" uk-drop="mode: click; animation: reveal-top; animate-out: true"  sec:authorize="isAuthenticated()">
-                  <ul class="uk-nav uk-navbar-dropdown-nav">
-                    <li class="uk-active"><a href="#">Active</a></li>
-                    <li class="uk-parent">
-                      <a href="#">Parent</a>
-                      <ul class="uk-nav-sub">
-                        <li><a href="#">Sub item</a></li>
-                        <li><a href="#">Sub item</a></li>
-                      </ul>
-                    </li>
-                    <li class="uk-nav-header">Header</li>
-                    <li>
-                      <a href="#"><span class="uk-margin-small-right uk-icon" uk-icon="icon: table"></span> Item</a>
-                    </li>
-                    <li>
-                      <a href="#"><span class="uk-margin-small-right uk-icon" uk-icon="icon: thumbnails"></span> Item</a>
-                    </li>
-                    <li class="uk-nav-divider"></li>
-                    <li>
-                      <a href="#"><span class="uk-margin-small-right uk-icon" uk-icon="icon: heart"></span> Item</a>
-                    </li>
-                  </ul>
-                </div>
               </li>
             </ul>
           </div>
